@@ -1,0 +1,103 @@
+@charset "utf-8";
+
+//colors
+$white-text: #ffffff;
+$family-serif: "Nunito";
+$family-primary: $family-serif;
+$label-color: $white-text;
+$label-weight: 400;
+
+/*
+navigation bar
+*/
+
+$navbar-background-color: #101010;
+$navbar-item-color: #ffffff;
+$navbar-item-active-color: #ffffff;
+$navbar-item-active-background-color: #282828;
+$navbar-item-hover-background-color: #282828;
+$navbar-item-hover-color: #ffffff;
+$navbar-fixed-z: 8888;
+
+/*
+	Table Univerisity View and Specialities View 
+*/
+
+$table-head-background-color: transparent;
+$table-head-cell-color: #ffffff;
+$table-body-background-color: #00000070;
+$table-cell-border-width: 0 0 0;
+$table-head-cell-border-width: 0 0 0;
+$table-cell-padding: 0.75rem 1rem;
+$table-row-hover-background-color: #33338d;
+
+/*
+	Search Bar University View and Specialities View 
+*/
+
+$input-border-color: none;
+$input-focus-color: white;
+$input-color: white;
+
+/*
+страничка с ВУЗами
+*/
+
+/*
+bulma card
+*/
+$card-radius: 10px;
+$card-background-color: rgba(2, 2, 2, 0.2);
+$card-color: white;
+$card-header-color: white;
+$card-header-padding: 0.7rem 1.4rem;
+$weight-bold: 400;
+
+/*
+bulma list
+*/
+
+$list-color: white;
+$list-item-title-color: white;
+$list-item-title-weight: 400;
+
+/*
+slider
+*/
+
+$slider-track-background: rgba(0, 0, 0, 0.4);
+$slider-thumb-background: linear-gradient(180deg, #d75a00 0%, #bf055e 100%);
+$slider-track-radius: 2rem;
+$slider-thumb-border: 3px solid white;
+
+/*
+modal 
+*/
+$modal-z: 9999;
+
+/*
+table
+*/
+$table-striped-row-even-background-color: #282828;
+
+/*
+footer
+*/
+// $footer-background-color: #101010;
+// $footer-color: #101010;
+
+@import "node_modules/bulma/sass/utilities/_all.sass";
+@import "node_modules/bulma/sass/base/_all.sass";
+@import "node_modules/bulma/sass/elements/button.sass";
+@import "node_modules/bulma/sass/elements/container.sass";
+@import "node_modules/bulma/sass/elements/table.sass";
+@import "node_modules/bulma/sass/elements/title.sass";
+@import "node_modules/bulma/sass/form/_all.sass";
+@import "node_modules/bulma/sass/components/navbar.sass";
+@import "node_modules/bulma/sass/components/card.sass";
+@import "node_modules/bulma/sass/layout/hero.sass";
+@import "node_modules/bulma/sass/layout/section.sass";
+@import "node_modules/bulma-list/sass/bulma-list.sass";
+@import "node_modules/bulma-slider/src/sass";
+@import "node_modules/bulma-slider/src/sass";
+@import "node_modules/@creativebulma/bulma-tooltip/src/sass";
