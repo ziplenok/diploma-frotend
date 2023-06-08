@@ -5,10 +5,8 @@
   "scripts": {
     "dev": "vite",
     "prestart": "npm run build",
-    "build": "npx vite build",
-    "start": "node index.js",
-    "preview": "vite preview --port 4173",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@creativebulma/bulma-tooltip": "^1.2.0",
