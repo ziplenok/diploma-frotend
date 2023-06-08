@@ -6,6 +6,7 @@
         @wheel.prevent
         @touchmove.prevent
         @scroll.prevent
+        @click="closeDropdowns"
       ></div>
       <div class="modal-card">
         <section class="modal-card-body mx-6 has-text-white has-text-centered">
@@ -28,10 +29,14 @@
                   <div class="dropdown-content">
                     <div
                       class="dropdown-item"
-                      v-for="subject in state.subjects"
-                      @click="selectSubject(subject)"
+                      v-for="(subject, index) in predictionStore.availableData
+                        .list"
+                      @click="selectSubject(subject.combination, index)"
                     >
-                      <a> {{ subject.prof1 }} - {{ subject.prof2 }} </a>
+                      <a>
+                        {{ subject.combination.prof1 }} -
+                        {{ subject.combination.prof2 }}
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -51,6 +56,7 @@
                     class="button trigger"
                     aria-haspopup="true"
                     aria-controls="dropdown-menu2"
+                    :disabled="isDisabledUniversity"
                   >
                     <span>Выбрать ВУЗ</span>
                   </button>
@@ -86,6 +92,7 @@
                 class="button is-rounded gradient-btn is-justify-content-center"
                 :class="{ 'is-selected': obj.selected }"
                 @click="selectPrava(obj.value)"
+                :disabled="obj.disabled"
               >
                 <span
                   class="has-tooltip-arrow has-tooltipl-multiline"
@@ -103,6 +110,7 @@
                   class="button is-rounded gradient-btn is-justify-content-center"
                   :class="{ 'is-selected': obj.selected }"
                   @click="selectPrava(obj.value)"
+                  :disabled="obj.disabled"
                 >
                   <span
                     class="has-tooltip-arrow has-tooltipl-multiline"
@@ -124,6 +132,7 @@
                 class="button is-rounded gradient-btn is-justify-content-center"
                 :class="{ 'is-selected': obj.selected }"
                 @click="selectQvota(obj.value)"
+                :disabled="obj.disabled"
               >
                 {{ obj.name }}
               </button>
@@ -145,7 +154,11 @@
             />
           </div>
 
-          <button class="button res-btn" @click="showResult">
+          <button
+            class="button res-btn"
+            @click="showResult"
+            :disabled="isReadyToSend"
+          >
             Показать результат
           </button>
         </section>
@@ -174,9 +187,9 @@ onBeforeMount(() => {
   universityStore.fetchUniversities();
 });
 
-onBeforeUnmount(() => {
-  document.documentElement.style.overflow = "auto";
-});
+// onBeforeUnmount(() => {
+//   document.documentElement.style.overflow = "auto";
+// });
 
 onMounted(() => {
   document.documentElement.style.overflow = "hidden";
@@ -194,8 +207,8 @@ const state = reactive({
   form: {
     subjects: {},
     university: {},
-    preimushestvo: {},
-    qvota: {},
+    preimushestvo: "-",
+    qvota: "City",
   },
   preimushestvo: [
     {
@@ -205,7 +218,8 @@ const state = reactive({
 превилегий
 при рассмотрений 
 вашей кандидатуры`,
-      selected: false,
+      selected: true,
+      disabled: false,
     },
     {
       name: "АБ",
@@ -213,96 +227,35 @@ const state = reactive({
       about: `Вы являетесь
       обладателем "Алтын белгі"`,
       selected: false,
+      disabled: true,
     },
     {
       name: "НЕПС",
       value: "непс",
       about: `Неполная семья`,
       selected: false,
+      disabled: true,
     },
     {
       name: "МНС",
       value: "мнс",
       about: `Многодетная семья`,
       selected: false,
+      disabled: true,
     },
     {
       name: "Отличник",
       value: "отличник",
       about: `Вы закончили школу с отличием`,
       selected: false,
+      disabled: true,
     },
   ],
   qvota: [
-    { name: "Общая", value: "City", selected: false },
-    { name: "Сельская", value: "Village", selected: false },
+    { name: "Общая", value: "City", selected: true, disabled: false },
+    { name: "Сельская", value: "Village", selected: false, disabled: true },
   ],
-  subjects: [
-    {
-      prof1: "Биология",
-      prof2: "География",
-    },
-    {
-      prof1: "Биология",
-      prof2: "Химия",
-    },
-    {
-      prof1: "Всемирная история",
-      prof2: "География",
-    },
-    {
-      prof1: "Всемирная история",
-      prof2: "Иностранный язык",
-    },
-    {
-      prof1: "Всемирная история",
-      prof2: "Основы права",
-    },
-    {
-      prof1: "География",
-      prof2: "Всемирная история",
-    },
-    {
-      prof1: "География",
-      prof2: "Иностранный язык",
-    },
-    {
-      prof1: "Иностранный язык",
-      prof2: "Всемирная история",
-    },
-    {
-      prof1: "Казахский /Русский язык",
-      prof2: "Казахская /Русская литература",
-    },
-    {
-      prof1: "Математика",
-      prof2: "География",
-    },
-    {
-      prof1: "Математика",
-      prof2: "География",
-    },
-    {
-      prof1: "Математика",
-      prof2: "Физика",
-    },
-    {
-      prof1: "Творческий экзамен",
-      prof2: "Творческий экзамен",
-    },
-    {
-      prof1: "Химия",
-      prof2: "Физика",
-    },
-    {
-      prof1: "Физика",
-      prof2: "Математика",
-    },
-    {
-      prof1: "Химия",
-      prof2: "Биология",
-    },
-  ],
+
   universities: universityStore.universitiesForPrediction,
 });
 
@@ -310,16 +263,44 @@ const state = reactive({
  * subjects dropdown
  */
 
+const closeDropdowns = () => {
+  isOpenedSubjects.value = false;
+  isOpenedUniversities.value = false;
+};
+
 const isOpenedSubjects = ref(false);
 
 const openSubjects = () => {
   isOpenedSubjects.value = !isOpenedSubjects.value;
+  isOpenedUniversities.value = false;
 };
 
-const selectSubject = (subject) => {
+const selectedIndex = ref(-1);
+
+const selectSubject = (subject, index) => {
   selectedSubject.value = subject;
   isOpenedSubjects.value = false;
   state.form.subjects = subject;
+  selectedIndex.value = index;
+  universityStore.setAvailableUniversityCodes(
+    predictionStore.availableData.list[index].univesities
+  );
+
+  state.preimushestvo.forEach((p) => (p.disabled = true));
+
+  state.preimushestvo.filter((p) => {
+    if (predictionStore.availableData.list[index].prava.includes(p.value)) {
+      p.disabled = false;
+    }
+  });
+
+  state.qvota.forEach((q) => (q.disabled = true));
+
+  state.qvota.filter((q) => {
+    if (predictionStore.availableData.list[index].status.includes(q.value)) {
+      q.disabled = false;
+    }
+  });
 };
 
 const selectedSubject = ref("");
@@ -342,8 +323,13 @@ watch(
       displayedSubject.value = "Все предметы";
       return;
     }
-    return (displayedSubject.value =
-      selectedSubject.value.prof1 + "-" + selectedSubject.value.prof2);
+
+    displayedSubject.value =
+      selectedSubject.value.prof1 + " - " + selectedSubject.value.prof2;
+
+    selectedUniversity.value = "";
+
+    return;
   }
 );
 
@@ -368,11 +354,15 @@ const selectedUniversity = ref("");
 
 const displayedUniversity = ref("Выбрать Университет");
 
+const isDisabledUniversity = ref(true);
+
 watch(
   () => selectedSubject.value,
   () => {
-    if (selectedUniversity.value.name !== "")
+    if (selectedUniversity.value.name !== "") {
+      isDisabledUniversity.value = false;
       return (displayedUniversity.value = selectedUniversity.value.name);
+    }
   }
 );
 
@@ -400,9 +390,21 @@ const selectQvota = (value) => {
   });
 };
 
+const isReadyToSend = ref(true);
+
+watch(
+  () => [selectedSubject.value, selectedUniversity.value],
+  () => {
+    if (selectedSubject.value !== "" && selectedUniversity.value !== "") {
+      isReadyToSend.value = false;
+      return;
+    }
+    return (isReadyToSend.value = true);
+  }
+);
+
 const showResult = () => {
   predictionStore.postForm(state.form, sliderValue.value);
-  router.push("/result");
 };
 </script>
 
@@ -419,7 +421,6 @@ const showResult = () => {
     #029482 93.02%
   );
   height: 100vh;
-  width: 100vw;
 }
 
 .modal-card-body {

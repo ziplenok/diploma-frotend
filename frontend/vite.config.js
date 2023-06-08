@@ -17,11 +17,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api_v1": {
-        target: "http://localhost:8080",
+        target: "https://springboot-postgresql-heroku.herokuapp.com",
         changeOrigin: true,
       },
       "/predict": {
-        target: "http://datlas03.pythonanywhere.com",
+        target: "http://MLProAccount.pythonanywhere.com",
         changeOrigin: true,
         secure: false,
       },

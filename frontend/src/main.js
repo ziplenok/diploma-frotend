@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { createApp, markRaw } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import { loadFonts } from "./plugins/webfontloader";
@@ -19,6 +19,12 @@ import {
 
 library.add(faXmark, faAngleDown, faAngleUp);
 
+const pinia = createPinia();
+
+pinia.use(({ store }) => {
+  store.$router = markRaw(router);
+});
+
 import VueEllipseProgress from "vue-ellipse-progress";
 
 loadFonts();
@@ -26,6 +32,6 @@ loadFonts();
 createApp(App)
   .use(VueEllipseProgress)
   .use(router)
-  .use(createPinia())
+  .use(pinia)
   .component("font-awesome-icon", FontAwesomeIcon)
   .mount("#app");

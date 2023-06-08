@@ -17,12 +17,6 @@ export const useUniversityStore = defineStore("university", () => {
         list.value = response.data;
       });
 
-      universitiesForPrediction.value = list.value.filter((u) =>
-        availableUniversityCodes.value.includes(
-          parseInt(u.code.replace(/^0+/, ""))
-        )
-      );
-
       loading.value = false;
     } catch (error) {
       handleError(error);
@@ -40,6 +34,15 @@ export const useUniversityStore = defineStore("university", () => {
 
   // const calculator = reactive({
   // });
+
+  function setAvailableUniversityCodes(codes) {
+    universitiesForPrediction.value = list.value.filter((u) =>
+      // availableUniversityCodes.value.includes(
+      //   parseInt(u.code.replace(/^0+/, ""))
+      // )
+      codes.includes(parseInt(u.code.replace(/^0+/, "")))
+    );
+  }
 
   const availableUniversityCodes = ref([
     13, 302, 25, 7, 42, 15, 141, 185, 37, 16, 34, 5, 47, 196, 20, 501, 43, 35,
@@ -79,5 +82,6 @@ export const useUniversityStore = defineStore("university", () => {
     getUniversityInfo,
     loading,
     universitiesForPrediction,
+    setAvailableUniversityCodes,
   };
 });

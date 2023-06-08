@@ -1,7 +1,39 @@
 <template>
   <div class="page-background">
     <div class="container">
-      <div class="result-wrapper">
+      <!-- if we dont have result -->
+      <article
+        v-if="predictionStore.resForm.result.length === 0"
+        class="message is-warning"
+      >
+        <div class="message-header">
+          <p>Результат не найден</p>
+          <button
+            @click="changeForm"
+            class="delete"
+            aria-label="delete"
+          ></button>
+        </div>
+        <div class="message-body">
+          <ul>
+            <li>
+              Возможно был уазан
+              <strong class="strong">маленький балл ЕНТ</strong>
+            </li>
+            <li>
+              Либо по Вашему запросу
+              <strong class="strong">недостаточно данных</strong>
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- if we have result -->
+      <div
+        v-else
+        v-for="(res, index) in predictionStore.resForm.result"
+        class="result-wrapper"
+      >
         <div class="columns">
           <div class="column">
             <div class="prediction-grid">
@@ -9,7 +41,7 @@
                 class="justify-self-center"
                 :color="'#6CD32C'"
                 :empty-color="'rgba(0, 0, 0, 0.24)'"
-                :progress="75"
+                :progress="predictionStore.resForm.result[index][1]"
                 :font-size="'1.6rem'"
                 :font-color="'white'"
                 :thickness="15"
@@ -30,10 +62,11 @@
               <p>{{ predictionStore.resForm.Univer.name }}</p>
             </div>
             <div class="result-row">
-              <p class="align-self-center">B074</p>
+              <p class="align-self-center">
+                {{ predictionStore.resForm.result[index][0].substring(0, 5) }}
+              </p>
               <p>
-                Градостроительство, строительные работы и гражданское
-                строительство
+                {{ predictionStore.resForm.result[index][0].substring(7) }}
               </p>
             </div>
             <div class="result-row">
@@ -74,7 +107,11 @@ const predictionStore = usePredictionStore();
 const router = useRouter();
 
 onMounted(() => {
-  document.documentElement.style.overflow = "hidden";
+  document.documentElement.style.overflowY = "auto";
+
+  if (predictionStore.resForm.result.length === 0) {
+    document.documentElement.style.overflow = "hidden";
+  }
 });
 
 const changeForm = () => {
@@ -94,21 +131,35 @@ const changeForm = () => {
     #3eb5a6 93.02%
   );
   min-height: 100vh;
-  min-width: 100vw;
+  // min-width: 100vw;
   @include desktop {
-    padding-top: 7rem;
+    padding: 4rem;
   }
   @include touch {
     padding: 1.7rem 1.6rem;
   }
 }
+
+.message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.strong {
+  font-weight: 700;
+}
+
 .result-wrapper {
   background: rgba(2, 2, 2, 0.3);
   @include desktop {
     padding: 2.5rem 6.5rem;
+    margin-top: 1rem;
   }
   @include touch {
     padding: 1rem 0;
+    margin-top: 1rem;
   }
   border-radius: 10px;
 }

@@ -375,8 +375,6 @@ const isActiveSelectSubject = ref(false),
   firstSelected = ref(""),
   secondSelected = ref("");
 
-const subjects = useSubjectsStore();
-
 const selectSubjectCombination = (first, second) => {
   firstSelected.value = first;
   secondSelected.value = second;
