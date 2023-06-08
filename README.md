@@ -1,21 +1,29 @@
-##Prerequisites
+# frontend
 
-   * Vue 3
+This template should help get you started developing with Vue 3 in Vite.
 
-## Installation
-1.Clone the repo
+## Recommended IDE Setup
 
-https://github.com/ziplenok/diploma-frotend
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-2.Install NPM packages
+## Customize configuration
 
-`npm install`
+See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-3.Start the server
+## Project Setup
 
-`npm run dev`
+```sh
+npm install
+```
 
+### Compile and Hot-Reload for Development
 
+```sh
+npm run dev
+```
 
+### Compile and Minify for Production
 
-[MIT](https://choosealicense.com/licenses/mit/)
+```sh
+npm run build
+```
