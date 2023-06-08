@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "serve": "vite preview",
-    "build": "vite build",
     "dev": "vite",
-    "preview": "vite preview"
+    "start": "node index.js",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
     "@creativebulma/bulma-tooltip": "^1.2.0",
