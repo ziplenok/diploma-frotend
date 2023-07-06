@@ -27,7 +27,7 @@ export const useUniversityStore = defineStore("university", () => {
 
   const getUniversityInfo = computed(() => {
     return (id) => {
-      console.log(list.value.filter((u) => u.id === parseInt(id)));
+      // console.log(list.value.filter((u) => u.id === parseInt(id)));
       return list.value.filter((u) => u.id === parseInt(id))[0];
     };
   });
@@ -47,8 +47,8 @@ export const useUniversityStore = defineStore("university", () => {
   const availableUniversityCodes = ref([
     13, 302, 25, 7, 42, 15, 141, 185, 37, 16, 34, 5, 47, 196, 20, 501, 43, 35,
     31, 517, 3, 10, 23, 11, 38, 27, 93, 45, 22, 53, 29, 40, 182, 184, 174, 153,
-    83, 21, 69, 190, 522, 36, 421, 122, 32, 12, 2, 24, 30, 49, 158, 57, 33, 19,
-    39, 14, 9, 157,
+    83, 21, 69, 190, 522, 421, 122, 32, 12, 2, 24, 30, 49, 158, 57, 33, 19, 39,
+    14, 9, 157,
   ]);
 
   const getUniversitiesByAvailableCode = computed(() => {
