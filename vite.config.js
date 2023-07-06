@@ -17,9 +17,23 @@ export default defineConfig({
   server: {
     proxy: {
       "/api_v1": {
-        target: "https://springboot-postgresql-heroku.herokuapp.com",
+        target: "http://localhost:8080",
+        // target: "https://springboot-postgresql-heroku.herokuapp.com",
         changeOrigin: true,
       },
+      "^/specialities/": {
+        target: "http://localhost:8080",
+        // target: "https://springboot-postgresql-heroku.herokuapp.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/specialities/, ""),
+      },
+      "^/university/": {
+        target: "http://localhost:8080",
+        // target: "https://springboot-postgresql-heroku.herokuapp.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/university/, ""),
+      },
+
       "/predict": {
         target: "http://MLProAccount.pythonanywhere.com",
         changeOrigin: true,

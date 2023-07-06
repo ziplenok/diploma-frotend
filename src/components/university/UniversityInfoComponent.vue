@@ -16,19 +16,25 @@
         Общая информация
       </h2>
       <div class="grid-2-col has-text-white is-size-6-mobile">
-        <div class="about grid-4-row">
+        <div class="about grid-row">
           <p>Код:</p>
           <p>Регион:</p>
           <p>Сайт:</p>
           <p>Телефон:</p>
           <p>Почта:</p>
+          <p>Общежитие:</p>
+          <p>Военная кафедра:</p>
+          <p>В предсазании:</p>
         </div>
-        <div class="justify-self-center grid-4-row">
+        <div class="justify-self-center grid-row">
           <p>{{ universityInfo.code }}</p>
           <p>{{ universityInfo.region }}</p>
           <p>{{ universityInfo.url }}</p>
           <p>{{ universityInfo.contact_phone }}</p>
           <p>{{ universityInfo.email }}</p>
+          <p>{{ renderYesOrNo(universityInfo.kafedra) }}</p>
+          <p>{{ renderYesOrNo(universityInfo.dormitory) }}</p>
+          <p>{{ renderYesOrNo(universityInfo.in_prediction) }}</p>
         </div>
       </div>
     </div>
@@ -127,6 +133,10 @@ const openEduProgramList = (key) => {
 };
 
 const emit = defineEmits(["closeInfo"]);
+
+const renderYesOrNo = (value) => {
+  return value === true ? `Да` : `Нет`;
+};
 </script>
 
 <style scoped lang="scss">
@@ -149,13 +159,13 @@ const emit = defineEmits(["closeInfo"]);
 
 .grid-2-col {
   display: grid;
-  grid-template-columns: 30fr 70fr;
+  grid-template-columns: 50fr 50fr;
 }
-.grid-4-row {
-  @include desktop {
-    display: grid;
-    row-gap: 1rem;
-  }
+.grid-row {
+  // @include desktop {
+  display: grid;
+  row-gap: 1rem;
+  // }
 }
 .about {
   color: #8f8f8f;
@@ -189,6 +199,14 @@ const emit = defineEmits(["closeInfo"]);
 thead {
   border-top: 1px solid white !important;
   border-bottom: 1px solid white !important;
+}
+
+tr {
+  background-color: #101010 !important;
+}
+
+tr:nth-child(2n) {
+  background-color: #282828 !important;
 }
 
 th {

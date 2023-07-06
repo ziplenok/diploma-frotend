@@ -17,8 +17,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "node_modules/bulma/bulma.sass";
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;700&display=swap");
+@import "node_modules/bulma/bulma.sass";
 @import "node_modules/bulma-checkradio/src/sass/index.sass";
 @import "node_modules/bulma-list/sass/bulma-list.sass";
 

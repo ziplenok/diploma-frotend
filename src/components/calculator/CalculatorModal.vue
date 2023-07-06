@@ -9,7 +9,7 @@
         @click="closeDropdowns"
       ></div>
       <div class="modal-card">
-        <section class="modal-card-body mx-6 has-text-white has-text-centered">
+        <section class="modal-card-body mx-2 has-text-white has-text-centered">
           <div class="dropdown-wrapper">
             <div class="mb-4">
               <div
@@ -103,7 +103,7 @@
             </div>
 
             <div id="scnd-row-prava">
-              <div class="is-flex is-justify-content-space-around">
+              <div class="is-flex is-justify-content-space-around gap">
                 <button
                   v-for="(obj, key) in state.preimushestvo.slice(3, 5)"
                   :key="key"
@@ -185,6 +185,7 @@ import { useRouter } from "vue-router";
 
 onBeforeMount(() => {
   universityStore.fetchUniversities();
+  window.scrollTo(0, 0);
 });
 
 // onBeforeUnmount(() => {
@@ -193,6 +194,10 @@ onBeforeMount(() => {
 
 onMounted(() => {
   document.documentElement.style.overflow = "hidden";
+});
+
+onBeforeUnmount(() => {
+  document.documentElement.style.overflow = "auto";
 });
 
 /**
@@ -428,9 +433,10 @@ const showResult = () => {
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.35) !important;
   border-radius: 10px !important;
   max-width: 28.25rem !important;
-  max-height: 36rem !important;
+  max-height: 39rem !important;
   padding: 1.4rem 0;
   position: relative;
+  align-self: center !important;
   @include desktop {
     padding-top: 2rem;
   }
@@ -518,6 +524,15 @@ const showResult = () => {
   }
 }
 
+.gap {
+  @include desktop {
+    column-gap: 1.4rem !important;
+  }
+  @include mobile {
+    column-gap: 1.4rem !important;
+  }
+}
+
 #row-qvota {
   padding: 0 4rem;
   @include mobile {
@@ -542,6 +557,10 @@ const showResult = () => {
   border: none;
   color: white;
   padding: 0.75rem 2rem !important;
+}
+
+.res-btn:disabled {
+  background: rgba(0, 0, 0, 0.4) !important;
 }
 
 .is-size-7 {

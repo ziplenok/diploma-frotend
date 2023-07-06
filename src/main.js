@@ -15,9 +15,10 @@ import {
   faAngleDown,
   faAngleUp,
   faXmark,
+  faAngleLeft,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faXmark, faAngleDown, faAngleUp);
+library.add(faXmark, faAngleDown, faAngleUp, faAngleLeft);
 
 const pinia = createPinia();
 

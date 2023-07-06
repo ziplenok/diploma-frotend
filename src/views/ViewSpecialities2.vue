@@ -1,25 +1,24 @@
 <template>
   <div class="page-background">
-    <div class="modal" :class="{ 'is-active': isOpenedUniversityInfo }">
+    <div class="modal" :class="{ 'is-active': isOpenedSpecialityDetails }">
+      <!-- <div class="modal is-active"> -->
       <div
         class="modal-background"
         @wheel.prevent
         @touchmove.prevent
         @scroll.prevent
-        @click="handleCloseInfo"
+        @click="handleCloseDetails"
       ></div>
       <div class="modal-content">
-        <RouterView @closeInfo="handleCloseInfo" />
+        <RouterView @closeDetails="handleCloseDetails" />
       </div>
     </div>
 
-    <!-- <RouterView name="calculator"></RouterView> -->
-
-    <div class="universities-container">
+    <div class="specialities-container">
       <div class="container">
         <header class="py-4" v-if="isMobile">
           <h1 class="is-size-4-mobile has-text-white has-text-centered">
-            ВУЗы
+            Программы
           </h1>
         </header>
 
@@ -35,22 +34,20 @@
             @scroll.prevent
           ></div>
 
-          <!-- Filter Dropdown -->
-
+          <!-- Filer Dropdown -->
           <div class="dropdown mr-3" :class="{ 'is-active': isOpenedFilter }">
             <div class="dropdown-trigger" @click="openFilterDropdown">
               <button
                 class="button filter-wrapper"
                 :class="{
                   elevate: isOpenedFilter,
-                  'loading-bg': universityStore.loading,
+                  'loading-bg': eduProgramStore.loading,
                 }"
                 aria-haspopup="true"
               >
-                <!-- <span class="mx-2">{{ state.cityButtonText }}</span> -->
                 <div
                   class="btn-wrapper"
-                  :class="{ 'after-load': universityStore.loading }"
+                  :class="{ 'after-load': eduProgramStore.loading }"
                 >
                   <span class="icon is-small">
                     <img
@@ -77,43 +74,21 @@
               role="menu"
             >
               <div class="dropdown-content">
-                <div class="dropdown-item checkbox-wrapper">
-                  <div
-                    class="has-text-white is-size-6 field is-flex is-flex-direction-column px-6"
-                  >
-                    <div class="mb-2">
-                      <input
-                        type="checkbox"
-                        id="checkKafedra"
-                        v-model="hasKafedra"
-                      />
-                      <label for="checkKafedra">Военная кафедра</label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        id="checkDormitory"
-                        v-model="hasDormitory"
-                      />
-                      <label for="checkDormitory">Общежитие</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="has-text-centered">
-                  <a
-                    class="dropdown-item is-size-6 has-text-grey"
-                    @click="selectCity('')"
-                  >
-                    Все города
-                  </a>
-                  <a
-                    v-for="c in universityStore.cities"
-                    class="dropdown-item is-size-6 has-text-grey"
-                    @click="selectCity(c)"
-                  >
-                    {{ c }}
-                  </a>
-                </div>
+                <!-- <div class="has-text-centered"> -->
+                <a
+                  class="dropdown-item is-size-6 has-text-grey"
+                  @click="selectCombination('')"
+                >
+                  Все предметы
+                </a>
+                <a
+                  v-for="c in eduProgramStore.list.combinations"
+                  class="dropdown-item is-size-6 has-text-grey"
+                  @click="selectCombination(c)"
+                >
+                  {{ c.prof1 }} - {{ c.prof2 }}
+                </a>
+                <!-- </div> -->
               </div>
             </div>
           </div>
@@ -122,7 +97,7 @@
 
           <p
             class="control has-icons-right input-control input-wrapper"
-            :class="{ 'loading-bg': universityStore.loading }"
+            :class="{ 'loading-bg': eduProgramStore.loading }"
           >
             <input
               class="input input-desktop"
@@ -130,7 +105,7 @@
               placeholder="Поиск"
               v-model="state.searchName"
             />
-            <span :class="{ 'after-load': universityStore.loading }">
+            <span :class="{ 'after-load': eduProgramStore.loading }">
               <span class="icon is-right">
                 <img
                   :src="searchWhiteIcon"
@@ -146,29 +121,24 @@
 
         <div
           class="table-wrapper"
-          :class="{ 'loading-bg': universityStore.loading }"
+          :class="{ 'loading-bg': eduProgramStore.loading }"
         >
           <table class="table is-hoverable">
             <thead>
               <tr>
                 <th class="shrink">
-                  <span :class="{ 'after-load': universityStore.loading }"
+                  <span :class="{ 'after-load': eduProgramStore.loading }"
                     >Код</span
                   >
                 </th>
                 <th class="fullwidth">
-                  <span :class="{ 'after-load': universityStore.loading }"
-                    >Название</span
+                  <span :class="{ 'after-load': eduProgramStore.loading }"
+                    >Специальность</span
                   >
                 </th>
                 <th class="shrink">
-                  <span :class="{ 'after-load': universityStore.loading }"
-                    >Сайт</span
-                  >
-                </th>
-                <th class="shrink">
-                  <span :class="{ 'after-load': universityStore.loading }"
-                    >Регион</span
+                  <span :class="{ 'after-load': eduProgramStore.loading }"
+                    >Предметы</span
                   >
                 </th>
               </tr>
@@ -176,7 +146,7 @@
             <tbody>
               <!-- Mock rows for loading -->
 
-              <tr v-for="n in state.rowsPerPage" v-if="universityStore.loading">
+              <tr v-for="n in state.rowsPerPage" v-if="eduProgramStore.loading">
                 <td class="loading-row"></td>
                 <td class="loading-row"></td>
                 <td class="loading-row"></td>
@@ -184,19 +154,18 @@
               </tr>
 
               <tr
-                v-for="(university, i) in state.paginatedData"
+                v-for="(speciality, i) in state.paginatedData"
                 :key="state.paginatedData[i]"
                 class="has-text-white"
-                @click="openModalInfo(university.id)"
+                v-if="!eduProgramStore.loading"
+                @click="openModalDetails(speciality.id)"
               >
-                <td class="shrink">{{ university.code }}</td>
-                <td>{{ university.name }}</td>
+                <td class="shrink">{{ speciality.code }}</td>
+                <td>{{ speciality.name }}</td>
                 <td class="shrink">
-                  <a :href="university.url" class="has-text-white">{{
-                    university.url
-                  }}</a>
+                  {{ speciality.prof1 }} -
+                  {{ speciality.prof2 }}
                 </td>
-                <td class="shrink">{{ university.city }}</td>
               </tr>
             </tbody>
           </table>
@@ -207,16 +176,15 @@
         <div class="table-wrapper-mobile">
           <div
             class="card mb-3 mx-3"
-            v-for="(university, i) in state.paginatedData"
+            v-for="(speciality, i) in state.paginatedData"
             :key="state.paginatedData[i]"
             v-if="isMobile"
-            @click="openModalInfo(university.id)"
           >
-            <!-- <RouterLink :to="`/${university.id}`"> -->
             <header class="card-header">
-              <p class="card-header-title" @click="openUniversityInfo()">
-                {{ university.name }}
+              <p class="card-header-title">
+                {{ speciality.name }}
               </p>
+
               <button class="card-header-icon" aria-label="more options">
                 <span class="icon favorite-icon-wrapper">
                   <img
@@ -227,21 +195,23 @@
                 </span>
               </button>
             </header>
-            <!-- </RouterLink> -->
           </div>
         </div>
+
+        <PaginationContent
+          :class="{ 'is-visible': isHidden }"
+          v-if="!eduProgramStore.loading"
+          :currentPage="state.currentPage"
+          :pageCount="state.pageCount"
+          @set-currentpage="setCurrentPage"
+        />
       </div>
-      <PaginationContent
-        :currentPage="state.currentPage"
-        :pageCount="state.pageCount"
-        @set-currentpage="setCurrentPage"
-      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, onBeforeMount, watch } from "vue";
+import { ref, reactive, computed, onBeforeMount, onMounted, watch } from "vue";
 import searchIcon from "@/components/icons/SearchIcon.svg";
 import searchWhiteIcon from "@/components/icons/SearchWhiteIcon.svg";
 import filterIcon from "@/components/icons/FilterIcon.svg";
@@ -251,17 +221,8 @@ import PaginationContent from "@/components/paginationa/PaginationContent.vue";
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 import favoriteIcon from "@/components/icons/FavoriteIcon.svg";
 import { useRouter } from "vue-router";
-import CalculatorModal from "@/components/calculator/CalculatorModal.vue";
-
-/*
-  router
-*/
-
-const router = useRouter();
-
-/*
-  breakpoints
-*/
+import { useEduProgramStore } from "@/stores/eduPrograms";
+import { vScrollLock } from "@vueuse/components";
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
 
@@ -269,27 +230,16 @@ const isMobile = breakpoints.isSmallerOrEqual("md");
 const isDesktop = breakpoints.isGreater("md");
 
 /*
-  Fetching all universities info
+  router
 */
 
-const universityStore = useUniversityStore();
+const router = useRouter();
+
+const eduProgramStore = useEduProgramStore();
 
 onBeforeMount(() => {
-  universityStore.fetchUniversities();
-  document.documentElement.style.overflowY = "auto";
+  eduProgramStore.fetchAllSpecialities();
 });
-
-/*
-  check boxes
-*/
-
-const hasKafedra = ref(false);
-
-const hasDormitory = ref(false);
-
-/*
-  filter by city
-*/
 
 const isOpenedFilter = ref(false);
 
@@ -304,65 +254,42 @@ watch(
   }
 );
 
-const selectedCity = ref("");
-
-const openFilterDropdown = () => {
-  isOpenedFilter.value = !isOpenedFilter.value;
-};
-
-const selectCity = (city) => {
-  selectedCity.value = city;
-  isOpenedFilter.value = false;
-};
-
-/*
-  reactive
-*/
-
 const state = reactive({
-  cityButtonText: computed(() => {
-    if (selectedCity.value === "") return "Город";
-    return selectedCity.value;
-  }),
-  searchName: "",
-  universityList: computed(() => {
-    let filterList = universityStore.list;
+  programsList: computed(() => {
+    let filterList = eduProgramStore.list.allSpecialities;
 
-    if (hasKafedra.value === true) {
+    if (selectedCombination.value !== "") {
       filterList = filterList.filter(
-        (university) => university.kafedra === true
+        (speciality) =>
+          speciality.prof1 === selectedCombination.value.prof1 &&
+          speciality.prof2 === selectedCombination.value.prof2
       );
-    }
 
-    if (hasDormitory.value === true) {
-      filterList = filterList.filter(
-        (university) => university.dormitory === true
-      );
-    }
+      console.log(filterList);
 
-    if (selectedCity.value !== "") {
-      filterList = filterList.filter(
-        (university) => university.city === selectedCity.value
-      );
       setCurrentPage(1);
     }
 
     if (state.searchName.trim().length > 0) {
-      filterList = filterList.filter((university) =>
-        university.name
+      filterList = filterList.filter((speciality) =>
+        speciality.name
           .toLowerCase()
           .includes(state.searchName.trim().toLowerCase())
       );
+
+      setCurrentPage(1);
     }
+
     return filterList;
   }),
+  searchName: "",
   currentPage: 1,
   rowsPerPage: 15,
   pageCount: computed(() =>
-    Math.ceil(state.universityList.length / state.rowsPerPage)
+    Math.ceil(state.programsList.length / state.rowsPerPage)
   ),
   paginatedData: computed(() =>
-    state.universityList.slice(
+    state.programsList.slice(
       (state.currentPage - 1) * state.rowsPerPage,
       state.currentPage * state.rowsPerPage
     )
@@ -373,36 +300,34 @@ function setCurrentPage(number) {
   state.currentPage = number;
 }
 
-const paginationVisible = ref(true);
-
-// watch(
-//   () => state.paginatedData.length,
-//   () => {
-//     if (state.paginatedData.length <= state.pageCount) {
-//       paginationVisible.value = false;
-//       return;
-//     }
-//   }
-// );
-
-/*
-  backdrop 
-*/
+const openFilterDropdown = () => {
+  isOpenedFilter.value = !isOpenedFilter.value;
+};
 
 const handleBackdropClick = () => {
   isOpenedFilter.value = false;
 };
 
-/*
-  get university info
-*/
+const handleCloseDetails = () => {
+  isOpenedSpecialityDetails.value = false;
+  router.push("/specialities");
+};
 
-const isOpenedUniversityInfo = ref(false);
+const selectedCombination = ref("");
+
+const selectCombination = (combination) => {
+  selectedCombination.value = combination;
+  //   eduProgramStore.fetchEduProgramsByCombination(combination);
+  isOpenedFilter.value = false;
+  //   console.log(combination);
+};
+
+const isOpenedSpecialityDetails = ref(false);
 
 watch(
-  () => isOpenedUniversityInfo.value,
+  () => isOpenedSpecialityDetails.value,
   () => {
-    if (isOpenedUniversityInfo.value) {
+    if (isOpenedSpecialityDetails.value) {
       document.documentElement.style.overflowY = "hidden";
       return;
     }
@@ -410,23 +335,27 @@ watch(
   }
 );
 
-const openUniversityInfo = () => {
-  isOpenedUniversityInfo.value = true;
+async function openModalDetails(id) {
+  console.log(id);
+  isOpenedSpecialityDetails.value = true;
   window.scrollTo(0, 0);
-};
+  //   await eduProgramStore.fetchSpecialityDetailsById(id);
 
-const handleCloseInfo = () => {
-  isOpenedUniversityInfo.value = false;
-  router.push("/university");
-};
+  router.push(`/specialities/${id}`);
+}
 
-const idPath = ref("");
+const isHidden = ref(false);
 
-const openModalInfo = (id) => {
-  isOpenedUniversityInfo.value = true;
-  window.scrollTo(0, 0);
-  router.push(`/university/${id}`);
-};
+watch(
+  () => state.programsList.length,
+  () => {
+    if (state.programsList.length < 15) {
+      isHidden.value = true;
+      return;
+    }
+    isHidden.value = false;
+  }
+);
 </script>
 
 <style scoped lang="scss">
@@ -435,16 +364,15 @@ const openModalInfo = (id) => {
 .page-background {
   background: linear-gradient(
     231.45deg,
-    #6844b5 5.16%,
-    rgba(72, 70, 182, 0.932297) 29.15%,
-    rgba(69, 121, 183, 0.946543) 52.29%,
-    #3992ae 72.43%,
-    #3eb5a6 93.02%
+    rgba(51, 0, 159, 0.85) 5.16%,
+    rgba(54, 35, 202, 0.932297) 29.15%,
+    rgba(48, 51, 188, 0.946543) 34.9%,
+    #196d88 56.51%,
+    #029482 93.02%
   );
   min-height: 100vh;
 }
-
-.universities-container {
+.specialities-container {
   @include desktop {
     padding: 4rem;
   }
@@ -457,12 +385,12 @@ const openModalInfo = (id) => {
   color: #8f8f8f !important;
 }
 
-.elevate {
-  z-index: 9999 !important;
-}
+// .elevate {
+//   z-index: 9999 !important;
+// }
 
 .backdrop {
-  z-index: 9998 !important;
+  // z-index: 9998 !important;
   background: rgba(0, 0, 0, 0.4);
   position: fixed;
   top: 0;
@@ -478,16 +406,7 @@ const openModalInfo = (id) => {
   Filter for Universities
 */
 
-.filter-search {
-  @include touch {
-    padding: 0 0.75rem;
-  }
-}
-
 .filter-wrapper {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
   background: linear-gradient(265.89deg, #3972c7 0%, #3b5dd6 100%);
   color: white !important;
   border-radius: 13px !important;
@@ -512,26 +431,19 @@ const openModalInfo = (id) => {
 }
 
 #dropdown-menu-desktop {
-  @include desktop {
-    transform: translateX(-5rem);
-  }
+  transform: translateX(-5rem);
 }
-
-.checkbox-wrapper {
-  overflow-y: hidden !important;
-}
-
 .dropdown-content {
   background-color: #101010;
   // padding: 1rem 1.5rem;
   color: white !important;
-  width: 21rem !important;
+  // width: 21rem !important;
   max-height: 15rem;
-  overflow: auto;
+  overflow-y: scroll !important;
 }
 
 .dropdown-content::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 
 .dropdown-content::-webkit-scrollbar-track {
@@ -558,15 +470,15 @@ input[type="checkbox"] {
   Search Bar for universities
 */
 
+.input-wrapper {
+  border-radius: 7px !important;
+}
+
 .search-wrapper {
   @include touch {
     padding: 0 0.75rem;
   }
   margin-bottom: 2rem !important;
-}
-
-.input-wrapper {
-  border-radius: 7px !important;
 }
 
 .input-control {
@@ -688,7 +600,7 @@ td.shrink {
 
 .open-info {
   height: 100vh;
-  z-index: 9000 !important;
+  z-index: 8888 !important;
   border-radius: 0 !important;
   background: #171717 !important;
   overflow: scroll;
@@ -697,11 +609,6 @@ td.shrink {
 .filter-mobile-wrapper {
   border-radius: 7px !important;
 }
-
-/**
-styles for loading
-*/
-
 .after-load {
   visibility: hidden;
 }
@@ -735,23 +642,18 @@ styles for loading
 }
 
 .loading-row {
-  min-height: 3.5rem !important;
+  height: 3rem !important;
 }
 
-// @keyframes gradient-animation_2 {
-//   0% {
-//     transform: translateX(-100%);
-//   }
+@keyframes gradient-animation_2 {
+  0% {
+    transform: translateX(-100%);
+  }
 
-//   100% {
-//     transform: translateX(100%);
-//   }
-// }
-
-// .modal {
-//   display: block !important;
-//   overflow: auto !important;
-// }
+  100% {
+    transform: translateX(100%);
+  }
+}
 
 .modal {
   z-index: 9999 !important;
@@ -760,6 +662,9 @@ styles for loading
 .modal-content {
   padding: 2rem 1rem !important;
   min-height: 100vh !important;
+  @include desktop {
+    min-width: 64rem;
+  }
   background: #101010;
 }
 
@@ -779,5 +684,9 @@ styles for loading
 
 .is-size-7 {
   font-size: 1.1rem !important;
+}
+
+.is-visible {
+  display: none;
 }
 </style>

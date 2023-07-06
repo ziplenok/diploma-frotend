@@ -10,13 +10,13 @@
   <nav class="navbar sticky-top" aria-label="main navigation" role="navigation">
     <div class="container">
       <div class="navbar-brand">
-        <div class="navbar-item mr-6">
+        <RouterLink to="/" class="navbar-item mr-6">
           <img
             :src="logoIcon"
             alt="streamlet logo icon"
             class="mr-4 logo-icon"
           /><span> streamlet </span>
-        </div>
+        </RouterLink>
         <a
           @click.prevent="showMobileNav = !showMobileNav"
           class="navbar-burger"
@@ -42,7 +42,7 @@
         />
 
         <RouterLink
-          to="/"
+          to="/university"
           class="navbar-item mobile-flex"
           active-class="is-active"
         >
@@ -88,6 +88,7 @@ import logoIcon from "@/assets/logo.svg";
 /*
 mobile nav
 */
+
 const showMobileNav = ref(false);
 
 const closeModal = () => {
@@ -146,6 +147,7 @@ const handleBackdropClick = () => {
   }
 }
 .navbar-item {
+  cursor: pointer;
   @include touch {
     border-radius: 7px !important;
   }

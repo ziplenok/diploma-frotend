@@ -8,9 +8,7 @@
     </main>
     <!-- <slot name="mobile-searchbar"></slot> -->
     <footer class="footer">
-      <div class="content has-text-centered">
-        <p>Footer Info</p>
-      </div>
+      <div class="content has-text-centered"></div>
     </footer>
   </div>
   <slot></slot>

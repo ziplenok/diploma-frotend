@@ -8,6 +8,8 @@ export const useEduProgramStore = defineStore("eduProgram", () => {
     allPrograms: [],
     programsByCombination: [],
     combinations: [],
+    allSpecialities: [],
+    specialityDetails: [],
   });
 
   async function fetchEduProgramsById(id) {
@@ -46,7 +48,39 @@ export const useEduProgramStore = defineStore("eduProgram", () => {
         list.allPrograms = response.data;
       });
 
-      list.combinations = _unique(list.allPrograms, ["prof1", "prof2"]);
+      // list.combinations = _unique(list.allPrograms, ["prof1", "prof2"]);
+
+      loading.value = false;
+    } catch (error) {
+      console.log("problem in edu programs");
+    }
+  }
+
+  async function fetchAllSpecialities() {
+    try {
+      loading.value = true;
+
+      const res = await axios.get("api_v1/specialities/ru").then((response) => {
+        list.allSpecialities = response.data;
+      });
+
+      list.combinations = _unique(list.allSpecialities, ["prof1", "prof2"]);
+
+      loading.value = false;
+    } catch (error) {
+      console.log("problem in edu programs");
+    }
+  }
+
+  async function fetchSpecialityDetailsById(id) {
+    try {
+      loading.value = true;
+
+      const res = await axios
+        .get("api_v1/specialities/ru/" + id)
+        .then((response) => {
+          list.specialityDetails = response.data;
+        });
 
       loading.value = false;
     } catch (error) {
@@ -57,6 +91,15 @@ export const useEduProgramStore = defineStore("eduProgram", () => {
   // const combinations = computed(() => {
   //   list.combinations = unique(list.allPrograms, ["prof1", "prof2"]);
   // });
+
+  // function _unique(arr, keyProps) {
+  //   const kvArray = arr.map((entry) => {
+  //     const key = keyProps.map((k) => entry[k]).join("|");
+  //     return [key, entry];
+  //   });
+  //   const map = new Map(kvArray);
+  //   return Array.from(map.values());
+  // }
 
   function _unique(arr, keyProps) {
     const kvArray = arr.map((entry) => {
@@ -78,6 +121,8 @@ export const useEduProgramStore = defineStore("eduProgram", () => {
     fetchEduProgramsById,
     fetchEduProgramsByCombination,
     fetchAllEduPrograms,
+    fetchAllSpecialities,
+    fetchSpecialityDetailsById,
     loading,
   };
 });

@@ -14,7 +14,7 @@ export const usePredictionStore = defineStore("prediction", () => {
         },
         univesities: [
           13, 302, 25, 7, 42, 15, 141, 185, 37, 16, 34, 5, 47, 196, 11, 31, 27,
-          2, 21, 38, 29, 40, 122, 24, 35, 53, 36, 45, 43, 501, 158, 12,
+          2, 21, 38, 29, 40, 122, 24, 35, 53, 45, 43, 501, 158, 12,
         ],
         prava: ["-", "аб", "мнс"],
         status: ["City", "Village"],
@@ -27,7 +27,7 @@ export const usePredictionStore = defineStore("prediction", () => {
         },
         univesities: [
           302, 7, 25, 185, 27, 13, 40, 31, 5, 45, 43, 16, 11, 38, 42, 10, 29,
-          53, 35, 24, 2, 30, 37, 32, 49, 36, 141, 122, 501, 34, 15,
+          53, 35, 24, 2, 30, 37, 32, 49, 141, 122, 501, 34, 15,
         ],
         prava: ["-", "аб", "мнс"],
         status: ["City", "Village"],
@@ -88,8 +88,7 @@ export const usePredictionStore = defineStore("prediction", () => {
         },
         univesities: [
           421, 21, 174, 13, 302, 27, 83, 122, 40, 32, 190, 5, 45, 43, 31, 12,
-          36, 69, 37, 2, 11, 29, 93, 38, 16, 7, 34, 22, 501, 24, 3, 42, 19, 157,
-          9,
+          69, 37, 2, 11, 29, 93, 38, 16, 7, 34, 22, 501, 24, 3, 42, 19, 157, 9,
         ],
         prava: ["-", "аб", "мнс", "отличник"],
         status: ["City", "Village"],
@@ -101,8 +100,8 @@ export const usePredictionStore = defineStore("prediction", () => {
           prof2: "Физика",
         },
         univesities: [
-          302, 185, 31, 13, 7, 25, 27, 43, 37, 11, 12, 42, 5, 45, 36, 38, 35,
-          40, 10, 517, 196, 3, 34, 421, 522, 83, 190, 32, 21, 29, 69, 24, 57, 2,
+          302, 185, 31, 13, 7, 25, 27, 43, 37, 11, 12, 42, 5, 45, 38, 35, 40,
+          10, 517, 196, 3, 34, 421, 522, 83, 190, 32, 21, 29, 69, 24, 57, 2,
           501, 93, 153, 16, 53, 15, 49, 122, 33, 184, 141, 19, 22, 39, 14, 9,
         ],
         prava: ["-", "аб", "мнс", "отличник"],
@@ -127,7 +126,7 @@ export const usePredictionStore = defineStore("prediction", () => {
         univesities: [
           20, 37, 13, 196, 5, 7, 34, 25, 15, 16, 501, 43, 141, 35, 31, 42, 517,
           38, 27, 93, 45, 22, 53, 29, 40, 182, 184, 190, 23, 69, 302, 522, 83,
-          174, 11, 36, 158,
+          174, 11, 158,
         ],
         prava: ["-", "аб", "мнс"],
         status: ["City", "Village"],
@@ -223,7 +222,7 @@ export const usePredictionStore = defineStore("prediction", () => {
 
       // const text = await response.text();
     } catch (error) {
-      console.log(error);
+      resForm.result = [];
     }
     loading.value = false;
 

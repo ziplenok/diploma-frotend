@@ -293,7 +293,6 @@ const selectCombination = (combination) => {
     #029482 93.02%
   );
   min-height: 100vh;
-  min-width: 100vw;
 }
 .specialities-container {
   @include desktop {

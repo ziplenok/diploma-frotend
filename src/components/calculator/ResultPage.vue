@@ -1,8 +1,15 @@
 <template>
   <div class="page-background">
-    <div class="container">
+    <div v-if="predictionStore.resForm.result.length === 0" class="image">
+      <font-awesome-icon
+        :icon="['fas', 'angle-left']"
+        class="circle-icon"
+        @click="changeForm"
+      />
+    </div>
+    <div class="container padding-container">
       <!-- if we dont have result -->
-      <article
+      <!-- <article
         v-if="predictionStore.resForm.result.length === 0"
         class="message is-warning"
       >
@@ -26,35 +33,40 @@
             </li>
           </ul>
         </div>
-      </article>
+      </article> -->
 
       <!-- if we have result -->
       <div
-        v-else
+        v-if="predictionStore.resForm.result.length !== 0"
         v-for="(res, index) in predictionStore.resForm.result"
         class="result-wrapper"
       >
         <div class="columns">
-          <div class="column">
+          <div class="column progress-wrapper">
             <div class="prediction-grid">
               <VeProgress
                 class="justify-self-center"
                 :color="'#6CD32C'"
                 :empty-color="'rgba(0, 0, 0, 0.24)'"
                 :progress="predictionStore.resForm.result[index][1]"
-                :font-size="'1.6rem'"
+                :font-size="'2.2rem'"
                 :font-color="'white'"
                 :thickness="15"
                 :emptyThickness="10"
                 :line-mode="'in 0.2'"
-                :colorFill="'rgba(0, 0, 0, 0.36)'"
+                :colorFill="'#1f334f'"
                 :emptyColorFill="'#038698'"
+                :size="170"
               />
 
-              <p class="prediction-text">Высокий шанс поступления на грант</p>
+              <p class="prediction-text">
+                {{
+                  renderPredictionText(predictionStore.resForm.result[index][1])
+                }}
+              </p>
             </div>
           </div>
-          <div class="column is-half">
+          <div class="column is-two-thirds">
             <div class="result-row">
               <p class="align-self-center">
                 {{ predictionStore.resForm.Univer.code }}
@@ -81,7 +93,7 @@
               <p>{{ predictionStore.resForm.Points }}</p>
             </div>
           </div>
-          <div class="column"></div>
+          <!-- <div class="column"></div> -->
         </div>
 
         <div class="is-flex is-justify-content-center">
@@ -114,6 +126,14 @@ onMounted(() => {
   }
 });
 
+const renderPredictionText = (value) => {
+  value = parseInt(value.slice(0, -1));
+
+  if (value > 50) return "Высокий шанс поступления на грант";
+  if (value === 50) return "Средний шанс поступления на грант";
+  if (value < 50) return "Небольшой шанс поступления на грант";
+};
+
 const changeForm = () => {
   router.push("/calculator");
 };
@@ -132,12 +152,42 @@ const changeForm = () => {
   );
   min-height: 100vh;
   // min-width: 100vw;
-  @include desktop {
-    padding: 4rem;
-  }
+  // @include desktop {
+  //   padding: 4rem;
+  // }
   @include touch {
     padding: 1.7rem 1.6rem;
   }
+}
+
+.image {
+  width: 100%;
+  height: 100vh;
+  background-position: center;
+  background-size: cover;
+  background-image: url("src/assets/img/tryagain-img.png");
+  // opacity: 0.4;
+  position: relative;
+}
+
+.circle-icon {
+  position: absolute;
+  top: 170px;
+  left: 520px;
+  height: 37px;
+  width: 37px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.4);
+  text-align: center;
+  line-height: 100px;
+  vertical-align: middle;
+  padding: 4px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.circle-icon:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .message {
@@ -151,18 +201,33 @@ const changeForm = () => {
   font-weight: 700;
 }
 
+.padding-container {
+  @include desktop {
+    padding: 4rem !important;
+  }
+}
+
 .result-wrapper {
   background: rgba(2, 2, 2, 0.3);
+  margin: 0 auto !important;
   @include desktop {
-    padding: 2.5rem 6.5rem;
-    margin-top: 1rem;
+    padding: 2rem 4rem;
+    max-width: 79rem;
   }
   @include touch {
     padding: 1rem 0;
-    margin-top: 1rem;
+    margin-top: 1rem !important;
   }
   border-radius: 10px;
 }
+
+.result-wrapper:not(:first-child) {
+  margin-top: 1.2rem !important;
+}
+
+// .progress-wrapper {
+//   max-width: 6.25rem !important;
+// }
 
 .result-row {
   background: rgba(2, 2, 2, 0.3);
@@ -185,12 +250,14 @@ const changeForm = () => {
 }
 .prediction-text {
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   text-align: center;
+  padding: 0 2.5rem;
 }
 .prediction-grid {
   display: grid;
   grid-template-columns: 1fr;
+  row-gap: 0.5rem;
 }
 .justify-self-center {
   justify-self: center;
